@@ -141,3 +141,90 @@ for obj in response['Contents']:
 
 ```
 _________________________________
+
+- List the objects in 'gid-staging' bucket starting with '2019/final_'.
+- For each file in the response, give it an ACL of 'public-read'.
+- Print the Public Object URL of each object.
+```
+import boto3
+
+# Create boto3 client to S3
+s3 = boto3.client('s3', region_name='us-east-1', 
+                         aws_access_key_id='IAmAFakeKey', 
+                         aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+
+# List only objects that start with '2019/final_'
+response = s3.list_objects(
+    Bucket='gid-staging', Prefix='2019/final_')
+
+# Iterate over the objects
+for obj in response['Contents']:
+
+    # Give each object ACL of public-read
+    s3.put_object_acl(Bucket='gid-staging', 
+                      Key=obj['Key'], 
+                      ACL='public-read')
+    
+    # Print the Public Object URL for each object
+    print("https://{}.s3.amazonaws.com/{}".format( 'gid-staging', obj['Key']))
+```
+_________________________________
+
+- Generate a presigned URL for final_report.csv that lasts 1 hour and allows the user to get the object.
+- Print out the generated presigned URL.
+```
+import boto3
+
+# Create boto3 client to S3
+s3 = boto3.client('s3', region_name='us-east-1', 
+                         aws_access_key_id='IAmAFakeKey', 
+                         aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                           
+# Generate presigned_url for the uploaded object
+share_url = s3.generate_presigned_url(
+  # Specify allowable operations
+  ClientMethod='get_object',
+  # Set the expiration time
+  ExpiresIn=3600,
+  # Set bucket and shareable object's name
+  Params={'Bucket': 'gid-staging','Key': 'final_report.csv'}
+)
+
+# Print out the presigned URL
+print(share_url)
+```
+_________________________________
+- List only objects that start with '2018/final_' in 'gid-staging' bucket.
+- For each file in response, load the object from S3.
+- Load the object's StreamingBody into pandas, and append to df_list.
+- Concatenate all the DataFrames with pandas.
+- Preview the resulting DataFrame.
+```
+import boto3
+
+# Create boto3 client to S3
+s3 = boto3.client('s3', region_name='us-east-1', 
+                         aws_access_key_id='IAmAFakeKey', 
+                         aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                         
+                         
+# List only objects that start with '2018/final_'                         
+response = s3.list_objects(Bucket='gid-staging', Prefix='2018/final_')
+
+df_list =  [ ] 
+
+for file in response['Contents']:
+    # For each file in response load the object from S3
+    obj = s3.get_object(Bucket='gid-requests', Key=file['Key'])
+    # Load the object's StreamingBody with pandas
+    obj_df = pd.read_csv(obj['Body'])
+    # Append the resulting DataFrame to list
+    df_list.append(obj_df)
+
+# Concat all the DataFrames with pandas
+df = pd.concat(df_list)
+
+# Preview the resulting DataFrame
+df.head()
+```
+_________________________________
