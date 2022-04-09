@@ -9,6 +9,8 @@ _________________________________
   - AWS Access Key = `IAmAFakeKey`
   - AWS Secret Access Key = `IAmAFakeSecretBecauseWeAreUsingMoto`
 ```
+import boto3
+
 # Generate the boto3 client for interacting with S3
 # Set up AWS credentials 
 s3 = boto3.client('s3', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
@@ -24,6 +26,8 @@ _________________________________
 
 > Initialize a boto3 client for S3, and another client for SNS.
 ```
+import boto3
+
 # Generate the boto3 client for interacting with S3 and SNS
 s3 = boto3.client('s3', region_name='us-east-1', 
                          aws_access_key_id='IAmAFakeKey', 
@@ -226,5 +230,32 @@ df = pd.concat(df_list)
 
 # Preview the resulting DataFrame
 df.head()
+```
+_________________________________
+
+- Upload the 'lines.html' file to 'datacamp-public' bucket.
+- Specify the proper content type for the uploaded file.
+- Specify that the file should be public.
+- Print the Public Object URL for the new file.
+```
+import boto3
+ 
+# Generate the boto3 client for interacting with S3
+# Set up AWS credentials 
+s3 = boto3.client('s3', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+# Upload the lines.html file to S3
+s3.upload_file(Filename='lines.html', 
+               # Set the bucket name
+               Bucket='datacamp-public', Key='index.html',
+               # Configure uploaded file
+               ExtraArgs = {
+                 # Set proper content type
+                 'ContentType':'text/html',
+                 # Set proper ACL
+                 'ACL': 'public-read'})
+
+# Print the S3 Public Object URL for the new file.
+print("http://{}.s3.amazonaws.com/{}".format('datacamp-public', 'index.html'))
 ```
 _________________________________
