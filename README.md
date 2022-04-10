@@ -432,3 +432,28 @@ if potholes > 100:
   )
 
 ```
+_________________________________
+### AWS Rekognition (Recognition)
+- Create a boto3 client to S3.
+- Upload the image `report.jpg` to the `datacamp-img` bucket
+- Use the Rekognition client to detect the labels for `report.jpg`. Return a maximum of 1 label.
+```
+# Generate the boto3 client for interacting with S3
+# Set up AWS credentials 
+import boto3
+
+s3 = boto3.client('s3', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+s3.upload_file(Filename='report.jpg', Key='report.jpg',   Bucket='datacamp-img')
+
+rekog = boto3.client('rekognition',region_name='us-east-1', aws_access_key_id='IAmAFakeKey', aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+
+# Use Rekognition client to detect labels
+image1_response = rekog.detect_labels(
+    # Specify the image as an S3Object; Return one label
+    Image='report.jpg', MaxLabels=1)
+
+# Print the labels
+print(image1_response['Labels'])
+
+```
