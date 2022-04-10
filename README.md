@@ -205,6 +205,7 @@ _________________________________
 - Preview the resulting DataFrame.
 ```
 import boto3
+import pandas as pd
 
 # Create boto3 client to S3
 s3 = boto3.client('s3', region_name='us-east-1', 
@@ -367,3 +368,64 @@ subs = pd.DataFrame(response['Subscriptions'])
 subs.head()
 ```
 _________________________________
+
+- List subscriptions for 'streets_critical' topic.
+- For each subscription, if the protocol is 'sms', unsubscribe.
+- List subscriptions for 'streets_critical' topic in one line.
+- Print the subscriptions
+```
+import boto3
+
+# Initialize boto3 client for SNS
+# Set up AWS credentials 
+s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
+                   aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+# List subscriptions for streets_critical topic.
+response = sns.list_subscriptions_by_topic(
+  TopicArn = 'arn:aws:sns:us-east-1:123456789012:streets_critical')
+
+# For each subscription, if the protocol is SMS, unsubscribe
+for sub in response['Subscriptions']:
+  if sub['Protocol'] == 'sms':
+	  sns.unsubscribe(SubscriptionArn=sub['SubscriptionArn'])
+
+# List subscriptions for streets_critical topic in one line
+subs = sns.list_subscriptions_by_topic(
+  TopicArn='arn:aws:sns:us-east-1:123456789012:streets_critical')['Subscriptions']
+
+# Print the subscriptions
+print(subs)
+
+```
+_________________________________
+
+- streets_v_count=150
+- If there are over 100 potholes, send a message with the current backlog count.
+- Create the email subject to also include the current backlog counit.
+- Publish message to the streets_critical Topic ARN.
+```
+import boto3
+
+# Initialize boto3 client for SNS
+# Set up AWS credentials 
+s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
+                   aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+streets_v_count=150
+# If there are over 100 potholes, create a message
+if streets_v_count > 100:
+  # The message should contain the number of potholes.
+  message = "There are {} potholes!".format(streets_v_count)
+  # The email subject should also contain number of potholes
+  subject = "Latest pothole count is {}".format(streets_v_count)
+
+  # Publish the email to the streets_critical topic
+  sns.publish(
+    TopicArn = 'arn:aws:sns:us-east-1:123456789012:streets_critical',
+    # Set subject and message
+    Message = message,
+    Subject = subject
+  )
+
+```
