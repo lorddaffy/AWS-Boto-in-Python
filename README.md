@@ -348,9 +348,9 @@ import boto3
 # Set up AWS credentials 
 s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
                    aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
-                
+  
+#print(contacts)  
 # For each email in contacts, create subscription to street_critical
-#print(contacts)
 for email in contacts['Email']:
   sns.subscribe(TopicArn = str_critical_arn,
                 # Set channel and recipient
@@ -365,5 +365,4 @@ subs = pd.DataFrame(response['Subscriptions'])
 # Preview the DataFrame
 subs.head()
 ```
-_________________________________
 _________________________________
