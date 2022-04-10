@@ -343,6 +343,7 @@ _________________________________
 - Preview the DataFrame.
 ```
 import boto3
+import pandas as pd
 
 # Initialize boto3 client for SNS
 # Set up AWS credentials 
