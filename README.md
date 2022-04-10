@@ -259,3 +259,111 @@ s3.upload_file(Filename='lines.html',
 print("http://{}.s3.amazonaws.com/{}".format('datacamp-public', 'index.html'))
 ```
 _________________________________
+### SNS
+
+- Initialize the boto3 client for SNS.
+- Create the 'city_alerts' topic and extract its topic ARN.
+- Re-create the 'city_alerts' topic and extract its topic ARN with a one-liner.
+- Verify the two topic ARNs match.
+```
+import boto3
+
+# Initialize boto3 client for SNS
+# Set up AWS credentials 
+s3 = boto3.client('sns', region_name='us-east-1', s_access_key_id='IAmAFakeKey', 
+                   awaws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+# Create the city_alerts topic
+response = sns.create_topic(Name="city_alerts")
+c_alerts_arn = response['TopicArn']
+
+# Re-create the city_alerts topic using a oneliner
+c_alerts_arn_1 = sns.create_topic(Name='city_alerts')['TopicArn']
+
+# Compare the two to make sure they match
+print(c_alerts_arn == c_alerts_arn_1)
+```
+_________________________________
+- Get the current list of topics.
+- For every topic ARN, if it doesn't have the word 'critical' in it, delete it.
+- Print the list of remaining critical topics.
+```
+import boto3
+
+# Initialize boto3 client for SNS
+# Set up AWS credentials 
+s3 = boto3.client('sns', region_name='us-east-1', s_access_key_id='IAmAFakeKey', 
+                   awaws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+# Get the current list of topics
+topics = sns.list_topics()['Topics']
+
+for topic in topics:
+  # For each topic, if it is not marked critical, delete it
+  if "critical" not in topic['TopicArn']:
+    sns.delete_topic(TopicArn=topic['TopicArn'])
+    
+# Print the list of remaining critical topics
+print(sns.list_topics()['Topics'])
+```
+_________________________________
+
+- Use Topic_Arn = `arn:aws:sns:us-east-1:123456789012:streets_critical`
+- Use Phone Number = `+16196777733`
+- Use Email = `eblock@sandiegocity.gov`
+```
+import boto3
+
+# Initialize boto3 client for SNS
+# Set up AWS credentials 
+s3 = boto3.client('sns', region_name='us-east-1', s_access_key_id='IAmAFakeKey', 
+                   awaws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+# Subscribe Elena's phone number to streets_critical topic
+resp_sms = sns.subscribe(
+  TopicArn = 'arn:aws:sns:us-east-1:123456789012:streets_critical', 
+  Protocol='sms', Endpoint="+16196777733")
+
+# Print the SubscriptionArn
+print(resp_sms['SubscriptionArn'])
+
+# Subscribe Elena's email to streets_critical topic.
+resp_email = sns.subscribe(
+  TopicArn = 'arn:aws:sns:us-east-1:123456789012:streets_critical', 
+  Protocol='email', Endpoint="eblock@sandiegocity.gov")
+
+# Print the SubscriptionArn
+print(resp_email['SubscriptionArn'])
+```
+_________________________________
+
+- Use `contacts` DataFrame to get the Emails
+- For each element in the `Email` column of `contacts`, create a subscription to the `streets_critical` Topic.
+- List subscriptions for the `streets_critical` Topic and convert them to a DataFrame.
+- Preview the DataFrame.
+```
+import boto3
+
+# Initialize boto3 client for SNS
+# Set up AWS credentials 
+s3 = boto3.client('sns', region_name='us-east-1', s_access_key_id='IAmAFakeKey', 
+                   awaws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+# For each email in contacts, create subscription to street_critical
+#print(contacts)
+for email in contacts['Email']:
+  sns.subscribe(TopicArn = str_critical_arn,
+                # Set channel and recipient
+                Protocol = 'email',
+                Endpoint = email)
+
+# List subscriptions for streets_critical topic, convert to DataFrame
+response = sns.list_subscriptions_by_topic(
+  TopicArn = str_critical_arn)
+subs = pd.DataFrame(response['Subscriptions'])
+
+# Preview the DataFrame
+subs.head()
+```
+_________________________________
+_________________________________
