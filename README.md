@@ -352,14 +352,14 @@ s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey
 #print(contacts)  
 # For each email in contacts, create subscription to street_critical
 for email in contacts['Email']:
-  sns.subscribe(TopicArn = str_critical_arn,
+  sns.subscribe(TopicArn = 'arn:aws:sns:us-east-1:123456789012:streets_critical',
                 # Set channel and recipient
                 Protocol = 'email',
                 Endpoint = email)
 
 # List subscriptions for streets_critical topic, convert to DataFrame
 response = sns.list_subscriptions_by_topic(
-  TopicArn = str_critical_arn)
+  TopicArn = 'arn:aws:sns:us-east-1:123456789012:streets_critical')
 subs = pd.DataFrame(response['Subscriptions'])
 
 # Preview the DataFrame
