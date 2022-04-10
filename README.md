@@ -401,9 +401,11 @@ print(subs)
 ```
 _________________________________
 
-- streets_v_count=150
+### Sending Messages
+
+- potholes=150
 - If there are over 100 potholes, send a message with the current backlog count.
-- Create the email subject to also include the current backlog counit.
+- Create the email subject to also include the current backlog count.
 - Publish message to the streets_critical Topic ARN.
 ```
 import boto3
@@ -413,13 +415,13 @@ import boto3
 s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
                    aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
                 
-streets_v_count=150
+potholes=150
 # If there are over 100 potholes, create a message
-if streets_v_count > 100:
+if potholes > 100:
   # The message should contain the number of potholes.
-  message = "There are {} potholes!".format(streets_v_count)
+  message = "There are {} potholes!".format(potholes)
   # The email subject should also contain number of potholes
-  subject = "Latest pothole count is {}".format(streets_v_count)
+  subject = "Latest pothole count is {}".format(potholes)
 
   # Publish the email to the streets_critical topic
   sns.publish(
