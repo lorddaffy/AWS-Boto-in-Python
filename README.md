@@ -270,8 +270,8 @@ import boto3
 
 # Initialize boto3 client for SNS
 # Set up AWS credentials 
-s3 = boto3.client('sns', region_name='us-east-1', s_access_key_id='IAmAFakeKey', 
-                   awaws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
+                   aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
                 
 # Create the city_alerts topic
 response = sns.create_topic(Name="city_alerts")
@@ -292,8 +292,8 @@ import boto3
 
 # Initialize boto3 client for SNS
 # Set up AWS credentials 
-s3 = boto3.client('sns', region_name='us-east-1', s_access_key_id='IAmAFakeKey', 
-                   awaws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
+                   aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
                 
 # Get the current list of topics
 topics = sns.list_topics()['Topics']
@@ -316,8 +316,8 @@ import boto3
 
 # Initialize boto3 client for SNS
 # Set up AWS credentials 
-s3 = boto3.client('sns', region_name='us-east-1', s_access_key_id='IAmAFakeKey', 
-                   awaws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
+                   aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
                 
 # Subscribe Elena's phone number to streets_critical topic
 resp_sms = sns.subscribe(
@@ -346,8 +346,8 @@ import boto3
 
 # Initialize boto3 client for SNS
 # Set up AWS credentials 
-s3 = boto3.client('sns', region_name='us-east-1', s_access_key_id='IAmAFakeKey', 
-                   awaws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+s3 = boto3.client('sns', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', 
+                   aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
                 
 # For each email in contacts, create subscription to street_critical
 #print(contacts)
