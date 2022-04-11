@@ -457,3 +457,71 @@ image1_response = rekog.detect_labels(
 print(image1_response['Labels'])
 
 ```
+_________________________________
+
+- Create a boto3 client to S3.
+- Upload the image `report.jpg` to the `datacamp-img` bucket
+- Use the Rekognition client to detect the labels for `report.jpg`. Return a maximum of 100 labels
+- Iterate over each element of the 'Labels' key in response.
+- Once you encounter a label with the name 'Cat', iterate over the label's instance.
+- If an instance's confidence level exceeds 85, increment cats count by 1.
+- Print the final cat count.
+```
+# Generate the boto3 client for interacting with S3
+# Set up AWS credentials 
+import boto3
+
+s3 = boto3.client('s3', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+s3.upload_file(Filename='report.jpg', Key='report.jpg',   Bucket='datacamp-img')
+
+rekog = boto3.client('rekognition',region_name='us-east-1', aws_access_key_id='IAmAFakeKey', aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+
+# Use Rekognition client to detect labels
+response = rekog.detect_labels(
+    # Specify the image as an S3Object; Return one label
+    Image='report.jpg', MaxLabels=100)
+
+# Create an empty counter variable
+cats_count = 0
+# Iterate over the labels in the response
+for label in response['Labels']:
+    # Find the cat label, look over the detected instances
+    if label['Name'] == 'Cat':
+        for instance in label['Instances']:
+            # Only count instances with confidence > 85
+            if (instance['Confidence'] > 85):
+                cats_count += 1
+# Print count of cats
+print(cats_count)
+```
+_________________________________
+- Create a boto3 client to S3.
+- Upload the image `txt_test.jpg` to the `datacamp-img` bucket
+- Iterate over each detected text in response, and append each detected text to words if the text's type is 'WORD'.
+```
+# Generate the boto3 client for interacting with S3
+# Set up AWS credentials 
+import boto3
+
+s3 = boto3.client('s3', region_name='us-east-1', aws_access_key_id='IAmAFakeKey', aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+                
+s3.upload_file(Filename='txt_test.jpg', Key='txt_test.jpg',   Bucket='datacamp-img')
+
+rekog = boto3.client('rekognition',region_name='us-east-1', aws_access_key_id='IAmAFakeKey', aws_secret_access_key='IAmAFakeSecretBecauseWeAreUsingMoto')
+
+# Use Rekognition client to detect labels
+response =rekog.detect_text(Image={'S3Object':{'Bucket': 'datacamp-img', 'Name': 'txt_test.jpg'}})
+
+words = []
+# Iterate over the TextDetections in the response dictionary
+for text_detection in response['TextDetections']:
+  	# If TextDetection type is WORD, append it to words list
+    if text_detection['Type'] == 'WORD':
+        # Append the detected text
+        words.append(text_detection['DetectedText'])
+# Print out the words list
+print(words)
+
+```
+_________________________________
